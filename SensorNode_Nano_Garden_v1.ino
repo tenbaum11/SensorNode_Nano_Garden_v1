@@ -9,7 +9,7 @@ SFE_BMP180 pressure;
 #define ALTITUDE 1655.0 // Altitude of SparkFun's HQ in Boulder, CO. in meters
 
 
-#define CLIENT_ADDRESS 1
+#define CLIENT_ADDRESS 7
 #define SERVER_ADDRESS 2
 
 const byte LED1_PIN=7;
@@ -33,7 +33,9 @@ RHDatagram manager(driver, CLIENT_ADDRESS);
 
 
 void setup() {
+  delay(500);
   Serial.begin(9600);
+  delay(500);
   
   // start BMP180
 //  if (pressure.begin())
@@ -57,28 +59,39 @@ void setup() {
 
   LED_FLASH(6, 100, LED1_PIN);
   Serial.println(F("SETUP COMPLETE"));
+  delay(500);
 }
 
 
 
 uint8_t data[] = "Hello World!";
 //uint8_t buf[RH_ASK_MAX_MESSAGE_LEN]; // Dont put this on the stack:
-
+ int wdtCount=0; 
+ const int WDT_INTERVALS = 15; 
 void loop() {
-    
-   //LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF); 
-  
-   A1_VAL = analogRead(A1_PIN);
-   A2_VAL = analogRead(A2_PIN);
-   A3_VAL = analogRead(A3_PIN);
-   A4_VAL = analogRead(A4_PIN);
+   delay(1);
+   //Serial.print(F("cnt:"));
+   //Serial.println(wdtCount);
+   wdtCount++;
+    if (wdtCount >= WDT_INTERVALS)
+    {
+      RH_SEND_DATA();
+      wdtCount=0;
+      
+    }
+   
+//   A1_VAL = analogRead(A1_PIN);
+//   A2_VAL = analogRead(A2_PIN);
+//   A3_VAL = analogRead(A3_PIN);
+//   A4_VAL = analogRead(A4_PIN);
 //   Serial.print(A1_VAL);   Serial.print(F(" : "));  
 //   Serial.print(A2_VAL);   Serial.print(F(" : ")); 
 //   Serial.print(A3_VAL);   Serial.print(F(" : ")); 
 //   Serial.println(A4_VAL);    
-   delay(100);
+//   delay(100);
    
-   RH_SEND_DATA();
+   
+   LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF); 
   // RH_SEND_MSG();
 }
 
