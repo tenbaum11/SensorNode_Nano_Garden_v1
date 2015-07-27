@@ -8,7 +8,15 @@
 SFE_BMP180 pressure;
 #define ALTITUDE 1655.0 // Altitude of SparkFun's HQ in Boulder, CO. in meters
 
+//#include <SPI.h>
+//#include <MySensor.h>  
+unsigned long SLEEP_TIME = 15000; // Sleep time between reads (in milliseconds)
+//MySensor gw(8,9);
 
+#define CHILD_ID_SOIL1   1    
+#define CHILD_ID_SOIL2   2    
+#define CHILD_ID_SOIL3 	 3    
+#define CHILD_ID_LDR	 4   
 #define CLIENT_ADDRESS 7
 #define SERVER_ADDRESS 2
 
@@ -39,7 +47,7 @@ void setup() {
   
   // start BMP180
 //  if (pressure.begin())
-//    Serial.println(F("BMP180 init success"));
+//    Serial.println(F("BMP180                                                                                                                                init success"));
 //  else
 //  {
 //    Serial.println(F("BMP180 init fail\n\n"));
@@ -67,7 +75,7 @@ void setup() {
 uint8_t data[] = "Hello World!";
 //uint8_t buf[RH_ASK_MAX_MESSAGE_LEN]; // Dont put this on the stack:
  int wdtCount=0; 
- const int WDT_INTERVALS = 15; 
+ const int WDT_INTERVALS = 1 ; 
 void loop() {
    delay(1);
    //Serial.print(F("cnt:"));
@@ -91,7 +99,7 @@ void loop() {
 //   delay(100);
    
    
-   LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF); 
+   LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_OFF); 
   // RH_SEND_MSG();
 }
 
@@ -115,10 +123,10 @@ void RH_SEND_DATA()
 { 
   const char *msg = "hello";
   char RHMsg[20];
-  A1_VAL = constrain( map(analogRead(A1_PIN), 0, 1023, 0, 255), 0, 255);   //415 - 275 415,275
-  A2_VAL = constrain( map(analogRead(A2_PIN), 0, 1023, 0, 255), 0, 255);   //415 - 275 415,275 
-  A3_VAL = constrain( map(analogRead(A3_PIN), 0, 1023, 0, 255), 0, 255);   //415 - 275 415,275  
-  A4_VAL = constrain( map(analogRead(A4_PIN), 0, 1023, 0, 255), 0, 255);   //415 - 275 415,275 
+  A1_VAL = constrain( map(analogRead(A1_PIN), 0, 1023, 0, 1023), 0, 1023);   //415 - 275 415,275
+  A2_VAL = constrain( map(analogRead(A2_PIN), 0, 1023, 0, 1023), 0, 1023);   //415 - 275 415,275 
+  A3_VAL = constrain( map(analogRead(A3_PIN), 0, 1023, 0, 1023), 0, 1023);   //415 - 275 415,275  
+  A4_VAL = constrain( map(analogRead(A4_PIN), 0, 1023, 0, 1023), 0, 1023);   //415 - 275 415,275 
   
   //sprintf(RHMsg, "%d,%d,%d.", TdegF, PinHg, AinFT);
   sprintf(RHMsg, "%d,%d,%d,%d.", A1_VAL, A2_VAL, A3_VAL, A4_VAL);
